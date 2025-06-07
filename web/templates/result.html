@@ -9,6 +9,10 @@
         max-width: 100%;
         height: auto;
       }
+
+      .position-absolute {
+        font-size: 0.9rem;
+      }
     </style>
   </head>
 
@@ -32,6 +36,17 @@
               <h5>Total Harga: <span class="badge bg-success">Rp{{ summary.total }}</span></h5>
             </div>
           </div>
+
+          <!-- Akurasi Real-Time Per Kategori -->
+          <div class="alert alert-warning mt-3">
+            <h6>🎯 Akurasi Real-Time per Kategori</h6>
+            <ul class="mb-0">
+              {% for label, data in summary.label_accuracy.items() %}
+              <li><strong>{{ label }}</strong>: {{ data.correct }} dari {{ data.total }} ({{ ((data.correct / data.total) * 100) | round(2) if data.total > 0 else 0 }}%)</li>
+              {% endfor %}
+            </ul>
+            <p class="mt-2"><strong>🔍 Total Akurasi Real-Time:</strong> {{ summary.realtime_accuracy }}%</p>
+          </div>
         </div>
       </div>
 
@@ -43,11 +58,10 @@
         <div class="card-body">
           <ol>
             <li>Ekstraksi fitur warna dari gambar menggunakan histogram warna RGB.</li>
-            <li>Fitur tersebut digunakan sebagai input ke model <strong>Random Forest</strong> yang telah dilatih sebelumnya.</li>
+            <li>Fitur tersebut digunakan sebagai input ke model <strong>{{ model_info.model }}</strong> yang telah dilatih sebelumnya.</li>
             <li>Model mengklasifikasikan gambar ke dalam 3 kategori: <em>Hitam Putih</em>, <em>Warna Sedikit</em>, dan <em>Warna Banyak</em>.</li>
             <li>Setiap kategori memiliki tarif cetak berbeda, dan dihitung totalnya.</li>
           </ol>
-          <p><strong>⚙️ Akurasi Model (evaluasi):</strong> ~97.4% pada data validasi</p>
         </div>
       </div>
 
@@ -56,9 +70,11 @@
         {% for item in predictions %}
         <div class="col">
           <div class="card h-100">
-            <img src="{{ url_for('static', filename='uploads/temp/' + item.filename) }}" class="card-img-top image-box" alt="Gambar" />
+            <div class="position-relative">
+              <span class="position-absolute top-0 start-0 bg-dark text-white px-2 py-1 rounded-end"> <strong> Page{{ loop.index }}</strong> </span>
+              <img src="{{ url_for('static', filename='uploads/temp/' + item.filename) }}" class="card-img-top image-box" alt="Gambar" />
+            </div>
             <div class="card-body">
-              <h6 class="card-title">{{ item.filename }}</h6>
               <p class="card-text">
                 Kategori: <strong>{{ item.label }}</strong><br />
                 Harga Cetak: <strong>Rp{{ item.price }}</strong>
@@ -69,6 +85,7 @@
         {% endfor %}
       </div>
 
+      <!-- Tombol ulang -->
       <div class="text-center mt-4">
         <a href="/" class="btn btn-primary">🔁 Klasifikasi Ulang</a>
       </div>
