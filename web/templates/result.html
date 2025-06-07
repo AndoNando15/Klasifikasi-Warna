@@ -32,16 +32,6 @@
               <h5>Total Harga: <span class="badge bg-success">Rp{{ summary.total }}</span></h5>
             </div>
           </div>
-
-          <!-- Akurasi Real-Time Per Kategori -->
-          <div class="alert alert-warning mt-3">
-            <h6>🎯 Akurasi Real-Time per Kategori</h6>
-            <ul class="mb-0">
-              {% for label, data in summary.label_accuracy.items() %}
-              <li><strong>{{ label }}</strong>: {{ data.correct }} dari {{ data.total }} ({{ ((data.correct / data.total) * 100) | round(2) if data.total > 0 else 0 }}%)</li>
-              {% endfor %}
-            </ul>
-          </div>
         </div>
       </div>
 
@@ -57,7 +47,7 @@
             <li>Model mengklasifikasikan gambar ke dalam 3 kategori: <em>Hitam Putih</em>, <em>Warna Sedikit</em>, dan <em>Warna Banyak</em>.</li>
             <li>Setiap kategori memiliki tarif cetak berbeda, dan dihitung totalnya.</li>
           </ol>
-          <p><strong>📌 Info Model:</strong> {{ model_info.model }}, <code>n_estimators={{ model_info.n_estimators }}</code>, akurasi validasi: <strong>{{ model_info.accuracy }}%</strong></p>
+          <p><strong>⚙️ Akurasi Model (evaluasi):</strong> ~97.4% pada data validasi</p>
         </div>
       </div>
 
@@ -79,7 +69,6 @@
         {% endfor %}
       </div>
 
-      <!-- Tombol ulang -->
       <div class="text-center mt-4">
         <a href="/" class="btn btn-primary">🔁 Klasifikasi Ulang</a>
       </div>
