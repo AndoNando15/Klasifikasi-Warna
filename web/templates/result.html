@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hasil Prediksi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+      .image-box {
+        max-width: 100%;
+        height: auto;
+      }
+    </style>
+  </head>
+
+  <body class="bg-light">
+    <div class="container mt-5">
+      <!-- Ringkasan Kategori dan Harga -->
+      <div class="card shadow mb-4">
+        <div class="card-header bg-info text-white">
+          <h4>Ringkasan Klasifikasi & Harga Cetak</h4>
+        </div>
+        <div class="card-body">
+          <div class="row mb-2">
+            <div class="col-md-6">
+              <ul>
+                <li>🖤 Hitam Putih: <strong>{{ summary.hitam_putih }}</strong></li>
+                <li>🟡 Warna Sedikit: <strong>{{ summary.warna_sedikit }}</strong></li>
+                <li>🌈 Warna Banyak: <strong>{{ summary.warna_banyak }}</strong></li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <h5>Total Harga: <span class="badge bg-success">Rp{{ summary.total }}</span></h5>
+            </div>
+          </div>
+
+          <!-- Akurasi Real-Time Per Kategori -->
+          <div class="alert alert-warning mt-3">
+            <h6>🎯 Akurasi Real-Time per Kategori</h6>
+            <ul class="mb-0">
+              {% for label, data in summary.label_accuracy.items() %}
+              <li><strong>{{ label }}</strong>: {{ data.correct }} dari {{ data.total }} ({{ ((data.correct / data.total) * 100) | round(2) if data.total > 0 else 0 }}%)</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Penjelasan Proses -->
+      <div class="card shadow mb-4">
+        <div class="card-header bg-secondary text-white">
+          <h5>🧠 Proses Klasifikasi</h5>
+        </div>
+        <div class="card-body">
+          <ol>
+            <li>Ekstraksi fitur warna dari gambar menggunakan histogram warna RGB.</li>
+            <li>Fitur tersebut digunakan sebagai input ke model <strong>Random Forest</strong> yang telah dilatih sebelumnya.</li>
+            <li>Model mengklasifikasikan gambar ke dalam 3 kategori: <em>Hitam Putih</em>, <em>Warna Sedikit</em>, dan <em>Warna Banyak</em>.</li>
+            <li>Setiap kategori memiliki tarif cetak berbeda, dan dihitung totalnya.</li>
+          </ol>
+          <p><strong>📌 Info Model:</strong> {{ model_info.model }}, <code>n_estimators={{ model_info.n_estimators }}</code>, akurasi validasi: <strong>{{ model_info.accuracy }}%</strong></p>
+        </div>
+      </div>
+
+      <!-- Grid Gambar dan Detail -->
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for item in predictions %}
+        <div class="col">
+          <div class="card h-100">
+            <img src="{{ url_for('static', filename='uploads/temp/' + item.filename) }}" class="card-img-top image-box" alt="Gambar" />
+            <div class="card-body">
+              <h6 class="card-title">{{ item.filename }}</h6>
+              <p class="card-text">
+                Kategori: <strong>{{ item.label }}</strong><br />
+                Harga Cetak: <strong>Rp{{ item.price }}</strong>
+              </p>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Tombol ulang -->
+      <div class="text-center mt-4">
+        <a href="/" class="btn btn-primary">🔁 Klasifikasi Ulang</a>
+      </div>
+    </div>
+  </body>
+</html>

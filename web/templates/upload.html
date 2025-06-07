@@ -1,0 +1,23 @@
+<!-- templates/upload.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Upload Dataset</title>
+  </head>
+
+  <body>
+    <h2>Upload Gambar ke Dataset</h2>
+    <form action="/upload_dataset" method="post" enctype="multipart/form-data">
+      <label>Pilih Kategori:</label><br />
+      <input type="radio" name="category" value="0_hitam_putih" required /> Hitam Putih<br />
+      <input type="radio" name="category" value="1_warna_sedikit" /> Warna Sedikit<br />
+      <input type="radio" name="category" value="2_warna_banyak" /> Warna Banyak<br /><br />
+
+      <input type="file" name="image" required />
+      <button type="submit">Upload</button>
+    </form>
+
+    <p><a href="/">Kembali ke Halaman Utama</a></p>
+  </body>
+</html>
